@@ -52,7 +52,7 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login/PcLogin'),
     hidden: true
   },
   {
@@ -129,6 +129,46 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  // 用户中心
+  {
+    path: '/person',
+    component: Layout,
+    // redirect: '/example/table',
+    name: 'UserCenter',
+    meta: { title: '用户中心', icon: 'el-icon-s-custom', roles: ['admin'] },
+    children: [
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/user/UserMain'),
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'role',
+        name: 'Role',
+        component: () => import('@/views/user/Role'),
+        meta: { title: '角色管理' }
+      },
+      {
+        path: 'department',
+        name: 'Department',
+        component: () => import('@/views/user/Department'),
+        meta: { title: '部门管理' }
+      },
+      {
+        path: 'permission',
+        name: 'Permission',
+        component: () => import('@/views/user/Permission'),
+        meta: { title: '权限管理' }
+      },
+      {
+        path: 'log',
+        name: 'UserOperationLog',
+        component: () => import('@/views/user/UserOperationLog'),
+        meta: { title: '操作日志' }
+      }
+    ]
+  },
   {
     path: '/permission',
     component: Layout,

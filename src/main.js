@@ -18,6 +18,16 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 
+// 使用vxe-table
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+import NProgress from 'nprogress'
+import getPageTitle from '@/utils/get-page-title'
+import { getToken } from '@/utils/auth'
+Vue.use(VXETable)
+Vue.prototype.$XModal = VXETable.modal
+
 import * as filters from './filters' // global filters
 
 /**
@@ -28,7 +38,7 @@ import * as filters from './filters' // global filters
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-if (process.env.NODE_ENV === 'production') {
+if (true) {
   const { mockXHR } = require('../mock')
   mockXHR()
 }

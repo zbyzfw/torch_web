@@ -20,8 +20,14 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_REALNAME: (state, realname) => {
+    state.realname = realname
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_PER: (state, permissions) => {
+    state.permissions = permissions
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -34,9 +40,9 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        const { token, refresh } = response
+        commit('SET_TOKEN', token)
+        setToken(token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -47,24 +53,19 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
+      getInfo().then(response => {
+        const data = response
+        // console.log('userinfo:',data)
+        if (response.code != 200) {
+          return reject('Verification failed, please Login again.')
         }
-
-        const { roles, name, avatar, introduction } = data
-
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        // const { name, avatar } = data
+        commit('SET_PER', data.permissions)
+        commit('SET_ROLES', [data.roles])
+        commit('SET_NAME', data.username)
+        commit('SET_REALNAME', data.realname)
+        commit('SET_AVATAR', '')
+        commit('SET_INTRODUCTION', '')
         resolve(data)
       }).catch(error => {
         reject(error)
